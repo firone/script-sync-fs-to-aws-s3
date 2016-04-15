@@ -24,7 +24,6 @@ public class UploadToS3 {
 
     private static Instant maxAgeOfFilesToBeUploaded;
     private static File basePath;
-    private static File pathToUpload;
     private static TransferManager transferManager;
     private static String awsBucketName;
 
@@ -38,10 +37,10 @@ public class UploadToS3 {
         awsBucketName = args[3];
         String basePathString = args[4];
 
-        pathToUpload = getPathToUpload(basePathString, args);
         maxAgeOfFilesToBeUploaded = Instant.now().minus(daysAgo, ChronoUnit.DAYS);
         transferManager = new TransferManager(new AmazonS3Client(new BasicAWSCredentials(awsIdentifier, awsPassword)));
 
+        File pathToUpload = getPathToUpload(basePathString, args);
         executorService.submit(executeOneDirectory(pathToUpload));
 
         while (!noWaitingExecution()) {
@@ -76,12 +75,12 @@ public class UploadToS3 {
             throw new IllegalArgumentException("You must have 5 or 6 params");
         }
 
-        log("daysAgo (Integer) "+args[0]);
-        log("awsIdentifier "+args[1]);
-        log("awsPassword "+args[2]);
-        log("awsBucketName "+args[3]);
-        log("absolutePathToDownload "+args[4]);
-        log("subfolder (optional) "+args[5]);
+        log("daysAgo (Integer) " + args[0]);
+        log("awsIdentifier " + args[1]);
+        log("awsPassword " + args[2]);
+        log("awsBucketName " + args[3]);
+        log("absolutePathToDownload " + args[4]);
+        log("subfolder (optional) " + args[5]);
     }
 
     private static Runnable executeOneDirectory(File directory) {
